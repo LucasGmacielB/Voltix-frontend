@@ -1,14 +1,29 @@
 import { create } from "zustand";
-import type { UserResponse } from "@/types/auth";
+import { persist } from "zustand/middleware";
 
-interface AuthStore {
-  user: UserResponse | null;
-  setUser: (user: UserResponse) => void;
+type User = {
+  id: number;
+  name: string;
+  email: string;
+};
+
+type AuthStore = {
+  user: User | null;
+  setUser: (user: User) => void;
   logout: () => void;
-}
+};
 
-export const useAuthStore = create<AuthStore>((set) => ({
-  user: null,
-  setUser: (user) => set({ user }),
-  logout: () => set({ user: null }),
-}));
+export const useAuthStore = create<AuthStore>()(
+  persist(
+    (set) => ({
+      user: null,
+
+      setUser: (user) => set({ user }),
+
+      logout: () => set({ user: null }),
+    }),
+    {
+      name: "voltix-auth",
+    }
+  )
+);
