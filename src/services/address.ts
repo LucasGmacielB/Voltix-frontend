@@ -1,15 +1,5 @@
 import { api } from "@/services/api";
-
-export interface Address {
-  id?: number;
-  street: string;
-  number: string;
-  neighborhood: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  userId: number;
-}
+import type { Address } from "@/types/address";
 
 export async function buscarEnderecos(): Promise<Address[]> {
   const response = await api.get<Address[]>("/addresses");
