@@ -8,3 +8,12 @@ export interface Address {
   zipCode: string;
   userId: number;
 }
+
+export type UpdateAddress = {
+  street: string;
+  number: string;
+  neighborhood: string;
+  city: string;
+  state: string;
+  zipCode: string;
+};

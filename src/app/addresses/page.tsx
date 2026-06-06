@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { IoLocationSharp, IoAddCircle } from "react-icons/io5";
+import Link from "next/link";
 
 import { buscarEnderecos, excluirEndereco } from "@/services/address";
 
@@ -112,11 +113,10 @@ export default function AddressesPage() {
               </div>
 
               <div className="flex gap-3 mt-6">
-                <button
-                  className="flex-1 bg-slate-800 hover:bg-slate-700 py-2 rounded-lg transition"
-                >
-                  Editar
-                </button>
+                <button onClick={() => router.push(`/addresses/edit/${endereco.id}`)}
+        className="flex-1 bg-slate-800 hover:bg-slate-700 py-2 rounded-lg transition">
+       Editar
+     </button>
 
                <button
   onClick={async () => {const confirmar = confirm("Deseja excluir este endereço?");

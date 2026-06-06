@@ -1,5 +1,5 @@
 import { api } from "@/services/api";
-import type { Address } from "@/types/address";
+import type { Address, UpdateAddress } from "@/types/address";
 
 export async function buscarEnderecos(): Promise<Address[]> {
   const response = await api.get<Address[]>("/addresses");
@@ -31,15 +31,14 @@ export async function criarEndereco(
 
 export async function atualizarEndereco(
   id: number,
-  endereco: Address,
+  endereco: UpdateAddress,
 ): Promise<Address> {
   const response = await api.put<Address>(
     `/addresses/${id}`,
     endereco,
   );
 
-    return response.data;
-
+  return response.data;
 }
 
 export async function excluirEndereco(id: number): Promise<void> {
