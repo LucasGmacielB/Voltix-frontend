@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { IoLocationSharp, IoAddCircle } from "react-icons/io5";
 
-import { buscarEnderecos } from "@/services/address";
+import { buscarEnderecos, excluirEndereco } from "@/services/address";
 
 export default function AddressesPage() {
   const router = useRouter();
@@ -49,11 +49,11 @@ export default function AddressesPage() {
           </div>
 
           <button
-            className="flex items-center gap-2 bg-green-600 hover:bg-green-500 px-5 py-3 rounded-xl font-semibold transition"
-          >
-            <IoAddCircle size={22} />
-            Novo Endereço
-          </button>
+  onClick={() => router.push("/addresses/new")}
+  className="flex items-center gap-2 bg-green-600 hover:bg-green-500 px-5 py-3 rounded-xl font-semibold transition"> 
+    <IoAddCircle size={22} />
+    Novo Endereço
+    </button>
         </div>
 
         {enderecos?.length === 0 && (
@@ -118,11 +118,25 @@ export default function AddressesPage() {
                   Editar
                 </button>
 
-                <button
-                  className="flex-1 bg-red-600 hover:bg-red-500 py-2 rounded-lg transition"
-                >
-                  Excluir
-                </button>
+               <button
+  onClick={async () => {const confirmar = confirm("Deseja excluir este endereço?");
+
+    if (!confirmar) return;
+
+    if (!endereco.id) {alert("ID do endereço inválido");return;}
+
+    try {
+      await excluirEndereco(endereco.id);
+
+      alert("Endereço excluído com sucesso!");
+
+      window.location.reload();
+    } catch {alert("Erro ao excluir endereço.");
+
+    }
+  }}
+  className="flex-1 bg-red-600 hover:bg-red-500 py-2 rounded-lg transition"> Excluir
+</button>
               </div>
             </div>
           ))}
