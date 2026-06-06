@@ -12,7 +12,7 @@ import { CircleAuth } from "@/components/component-circle-login/CircleAuth";
 
 export default function LoginPage() {
   const router = useRouter();
-  const setUser = useAuthStore((state) => state.setUser);
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +32,7 @@ export default function LoginPage() {
 
     try {
       const user = await login({ email, password });
-      setUser(user);
+      setAuth(user, password);
       router.push("/dashboard");
     } catch (err) {
       setError(getErrorMessage(err));

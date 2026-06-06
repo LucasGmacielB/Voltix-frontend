@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { useAuthStore } from "@/store/useAuthStore";
-import { criarEndereco } from "@/services/address";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+import { criarEndereco } from "@/services/address";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function NewAddressPage() {
+  const router = useRouter();
+  const basicAuth = useAuthStore((state) => state.basicAuth);
+
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState("");
   const [neighborhood, setNeighborhood] = useState("");
@@ -13,29 +17,39 @@ export default function NewAddressPage() {
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
 
-  const router = useRouter();
-  const user = useAuthStore((state) => state.user);
-
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (!user) {
+    if (!basicAuth) {
       alert("Usuário não autenticado.");
+      router.push("/login");
+      return;
+    }
+
+    if (
+      !street.trim() ||
+      !number.trim() ||
+      !neighborhood.trim() ||
+      !city.trim() ||
+      !state.trim() ||
+      !zipCode.trim()
+    ) {
+      alert("Preencha todos os campos.");
       return;
     }
 
     try {
-      await criarEndereco({
-        street,
-        number,
-        neighborhood,
-        city,
-        state,
-        zipCode,
-        userId: user.id,
-      });
+      await criarEndereco(
+        {
+          street,
+          number,
+          neighborhood,
+          city,
+          state,
+          zipCode,
+        },
+        basicAuth
+      );
 
       alert("Endereço cadastrado com sucesso!");
       router.push("/addresses");
@@ -43,87 +57,105 @@ export default function NewAddressPage() {
       console.error(error);
       alert("Erro ao cadastrar endereço.");
     }
-  };
+  }
 
+  if (!basicAuth) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-950 text-white">
+        Usuário não autenticado.
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-slate-950 text-white">
-      <div className="max-w-2xl mx-auto px-6 py-10">
-        <h1 className="text-4xl font-bold text-green-500 mb-2">
+      <div className="mx-auto max-w-2xl px-6 py-10">
+        <h1 className="mb-2 text-4xl font-bold text-green-500">
           Novo Endereço
         </h1>
 
-        <p className="text-slate-400 mb-8">
-          Cadastre um novo endereço
-        </p>
+        <p className="mb-8 text-slate-400">Cadastre um novo endereço</p>
 
-        <form className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-5" onSubmit={handleSubmit}>
+        <form
+          className="space-y-5 rounded-2xl border border-slate-800 bg-slate-900 p-6"
+          onSubmit={handleSubmit}
+        >
           <div>
-            <label className="block mb-2">Rua</label>
+            <label className="mb-2 block">Rua</label>
             <input
               type="text"
-              className="w-full bg-slate-800 rounded-lg p-3"
+              className="w-full rounded-lg bg-slate-800 p-3 outline-none transition focus:ring-2 focus:ring-green-500"
               value={street}
               onChange={(e) => setStreet(e.target.value)}
             />
           </div>
 
           <div>
-            <label className="block mb-2">Número</label>
+            <label className="mb-2 block">Número</label>
             <input
               type="text"
-              className="w-full bg-slate-800 rounded-lg p-3"
+              className="w-full rounded-lg bg-slate-800 p-3 outline-none transition focus:ring-2 focus:ring-green-500"
               value={number}
               onChange={(e) => setNumber(e.target.value)}
             />
           </div>
 
           <div>
-            <label className="block mb-2">Bairro</label>
+            <label className="mb-2 block">Bairro</label>
             <input
               type="text"
-              className="w-full bg-slate-800 rounded-lg p-3"
+              className="w-full rounded-lg bg-slate-800 p-3 outline-none transition focus:ring-2 focus:ring-green-500"
               value={neighborhood}
               onChange={(e) => setNeighborhood(e.target.value)}
             />
           </div>
 
           <div>
-            <label className="block mb-2">Cidade</label>
+            <label className="mb-2 block">Cidade</label>
             <input
               type="text"
-              className="w-full bg-slate-800 rounded-lg p-3"
+              className="w-full rounded-lg bg-slate-800 p-3 outline-none transition focus:ring-2 focus:ring-green-500"
               value={city}
               onChange={(e) => setCity(e.target.value)}
             />
           </div>
 
           <div>
-            <label className="block mb-2">Estado</label>
+            <label className="mb-2 block">Estado</label>
             <input
               type="text"
-              className="w-full bg-slate-800 rounded-lg p-3"
+              className="w-full rounded-lg bg-slate-800 p-3 outline-none transition focus:ring-2 focus:ring-green-500"
               value={state}
               onChange={(e) => setState(e.target.value)}
             />
           </div>
 
           <div>
-            <label className="block mb-2">CEP</label>
+            <label className="mb-2 block">CEP</label>
             <input
               type="text"
-              className="w-full bg-slate-800 rounded-lg p-3"
+              className="w-full rounded-lg bg-slate-800 p-3 outline-none transition focus:ring-2 focus:ring-green-500"
               value={zipCode}
               onChange={(e) => setZipCode(e.target.value)}
             />
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-green-600 hover:bg-green-500 py-3 rounded-lg font-semibold transition"
-          >
-            Salvar Endereço
-          </button>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              onClick={() => router.push("/addresses")}
+              className="flex-1 rounded-lg bg-slate-800 py-3 font-semibold transition hover:bg-slate-700"
+            >
+              Cancelar
+            </button>
+
+            <button
+              type="submit"
+              className="flex-1 rounded-lg bg-green-600 py-3 font-semibold transition hover:bg-green-500"
+            >
+              Salvar Endereço
+            </button>
+          </div>
         </form>
       </div>
     </main>
