@@ -8,6 +8,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { getErrorMessage } from "@/utils/getErrorMessage";
 import { Logo } from "@/components/logo/Logo";
 import { IoPersonCircle } from "react-icons/io5";
+import { CircleAuth } from "@/components/component-circle-login/CircleAuth";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -54,9 +55,7 @@ export default function LoginPage() {
         </header>
 
         <div className="mx-auto mt-10 flex max-w-6xl flex-col items-center text-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-green-500/60 bg-green-500/10 shadow-[0_0_25px_rgba(34,197,94,0.35)]">
-            <span className="text-6xl text-green-500 shadow-green-500"><IoPersonCircle /></span>
-          </div>
+          <CircleAuth icon={<IoPersonCircle />}/>
 
           <h1 className="mt-5 text-xl font-semibold md:text-3xl text-gray-500">
             Acesse sua conta
