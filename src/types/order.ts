@@ -47,3 +47,7 @@ export interface CreateOrderResponse {
   order: Order;
   message: string;
 }
+
+export interface CancelOrderResponse {
+  message: string;
+}
