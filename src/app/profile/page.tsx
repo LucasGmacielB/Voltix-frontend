@@ -11,6 +11,10 @@ export default function ProfilePage() {
   
 
   const user = useAuthStore((state) => state.user);
+  const basicAuth = useAuthStore((state) => state.basicAuth);
+
+  console.log("USER:", user);
+  console.log("AUTH:", basicAuth);
   const logout = useAuthStore((state) => state.logout);
 
   const updateUser = useAuthStore((state) => state.updateUser);

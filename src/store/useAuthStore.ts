@@ -10,7 +10,10 @@ type User = {
 type AuthStore = {
   user: User | null;
   basicAuth: string | null;
+
   setUser: (user: User) => void;
+  setAuth: (user: User, password: string) => void;
+  updateUser: (user: User) => void;
   logout: () => void;
 };
 
