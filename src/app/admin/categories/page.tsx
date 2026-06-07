@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { categoryService } from "@/services/categoryService";
 import { Category } from "@/types/category";
 import Link from "next/link";
+import { Logo } from "@/components/logo/Logo";
 
 export default function AdminCategoriesPage(){
   const queryClient = useQueryClient();
@@ -31,8 +32,13 @@ export default function AdminCategoriesPage(){
   });
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: { name: string; description: string } }) =>
-      categoryService.update(id, data),
+    mutationFn: ({
+      id,
+      data,
+    }: {
+      id: number;
+      data: { name: string; description: string };
+    }) => categoryService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       resetForm();
@@ -60,14 +66,13 @@ export default function AdminCategoriesPage(){
       description,
     };
 
-    if (editingCategory){
+    if(editingCategory){
       updateMutation.mutate({
         id: editingCategory.id,
         data,
       });
       return;
     }
-
     createMutation.mutate(data);
   }
 
@@ -90,138 +95,154 @@ export default function AdminCategoriesPage(){
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
   return(
-    <main className="min-h-screen bg-[#020617] px-6 py-10 text-white">
-      <section className="mx-auto max-w-6xl">
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-cyan-400">
-              Painel administrativo
-            </p>
-            <h1 className="text-4xl font-bold">Gerenciar categorias</h1>
-            <p className="mt-3 text-slate-300">
-              Cadastre, edite e remova categorias utilizadas na loja Voltix.
-            </p>
-          </div>
+    <main className="min-h-screen bg-zinc-100">
+      <section className="relative bg-gradient-to-br from-black via-zinc-950 to-zinc-900 px-6 py-6 text-white">
+        <header className="mx-auto flex max-w-6xl items-center justify-between">
+          <Logo />
 
           <Link
             href="/categories"
-            className="rounded-xl border border-cyan-400 px-5 py-3 text-sm font-bold text-cyan-300 transition hover:bg-cyan-400 hover:text-slate-950"
+            className="text-sm text-zinc-300 transition hover:text-green-400"
           >
             Ver página pública
           </Link>
+        </header>
+
+        <div className="mx-auto mt-12 max-w-6xl pb-20">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-400">
+            Painel administrativo
+          </p>
+
+          <h1 className="text-3xl font-semibold text-white md:text-5xl">
+            Gerenciar categorias
+          </h1>
+
+          <p className="mt-4 max-w-2xl text-zinc-400">
+            Cadastre, edite e remova categorias utilizadas na organização dos
+            produtos da Voltix.
+          </p>
         </div>
+      </section>
 
-        <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
-          <form
-            onSubmit={handleSubmit}
-            className="h-fit rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-xl"
-          >
-            <h2 className="mb-5 text-2xl font-bold">
-              {editingCategory ? "Editar categoria" : "Nova categoria"}
-            </h2>
+      <section className="relative z-10 mx-auto -mt-12 grid max-w-6xl gap-8 px-6 pb-12 lg:grid-cols-[380px_1fr]">
+        <form
+          onSubmit={handleSubmit}
+          className="h-fit rounded-xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl"
+        >
+          <h2 className="mb-5 text-2xl font-semibold text-white">
+            {editingCategory ? "Editar categoria" : "Nova categoria"}
+          </h2>
 
-            <label className="mb-2 block text-sm font-medium text-slate-300">
-              Nome
-            </label>
+          <label className="block space-y-2">
+            <span className="text-sm font-medium text-zinc-300">Nome</span>
             <input
               type="text"
               placeholder="Ex: Smartphones"
               value={name}
               onChange={(event) => setName(event.target.value)}
               required
-              className="mb-4 w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+              className="w-full border-b border-zinc-700 bg-transparent px-1 py-2 text-white outline-none transition placeholder:text-zinc-500 focus:border-green-500"
             />
+          </label>
 
-            <label className="mb-2 block text-sm font-medium text-slate-300">
+          <label className="mt-5 block space-y-2">
+            <span className="text-sm font-medium text-zinc-300">
               Descrição
-            </label>
+            </span>
             <textarea
               placeholder="Descrição da categoria"
               value={description}
               onChange={(event) => setDescription(event.target.value)}
               required
               rows={5}
-              className="mb-5 w-full resize-none rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-cyan-400"
+              className="w-full resize-none border-b border-zinc-700 bg-transparent px-1 py-2 text-white outline-none transition placeholder:text-zinc-500 focus:border-green-500"
             />
+          </label>
 
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="mt-6 w-full rounded-md bg-green-600 px-4 py-3 font-semibold text-white transition hover:bg-green-500 disabled:cursor-not-allowed disabled:bg-zinc-600"
+          >
+            {isSubmitting
+              ? "Salvando..."
+              : editingCategory
+                ? "Atualizar categoria"
+                : "Cadastrar categoria"}
+          </button>
+
+          {editingCategory && (
             <button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full rounded-xl bg-cyan-500 px-5 py-3 font-bold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
+              type="button"
+              onClick={resetForm}
+              className="mt-3 w-full rounded-md border border-zinc-700 px-4 py-3 font-semibold text-zinc-300 transition hover:border-green-500 hover:text-green-400"
             >
-              {isSubmitting
-                ? "Salvando..."
-                : editingCategory
-                  ? "Atualizar categoria"
-                  : "Cadastrar categoria"}
+              Cancelar edição
             </button>
+          )}
+        </form>
 
-            {editingCategory && (
-              <button
-                type="button"
-                onClick={resetForm}
-                className="mt-3 w-full rounded-xl border border-slate-600 px-5 py-3 font-bold text-slate-300 transition hover:bg-slate-800"
+        <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl">
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <h2 className="text-2xl font-semibold text-white">
+              Categorias cadastradas
+            </h2>
+
+            <span className="rounded-full bg-green-600 px-4 py-1 text-sm font-semibold text-white">
+              {categories?.length || 0} itens
+            </span>
+          </div>
+
+          {isLoading && <p className="text-zinc-300">Carregando...</p>}
+
+          {isError && (
+            <p className="rounded-md border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-400">
+              Erro ao carregar categorias. Verifique se o backend está rodando.
+            </p>
+          )}
+
+          {!isLoading && categories?.length === 0 && (
+            <p className="text-zinc-300">Nenhuma categoria cadastrada.</p>
+          )}
+
+          <div className="space-y-4">
+            {categories?.map((category) => (
+              <div
+                key={category.id}
+                className="flex flex-col gap-4 rounded-xl border border-zinc-800 bg-zinc-950 p-5 transition hover:border-green-500 md:flex-row md:items-center md:justify-between"
               >
-                Cancelar edição
-              </button>
-            )}
-          </form>
+                <div>
+                  <h3 className="text-xl font-semibold text-white">
+                    {category.name}
+                  </h3>
 
-          <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-xl">
-            <div className="mb-5 flex items-center justify-between">
-              <h2 className="text-2xl font-bold">Categorias cadastradas</h2>
-              <span className="rounded-full bg-cyan-500/20 px-4 py-1 text-sm font-bold text-cyan-300">
-                {categories?.length || 0} itens
-              </span>
-            </div>
+                  <p className="mt-1 text-sm text-zinc-400">
+                    {category.description}
+                  </p>
 
-            {isLoading && <p className="text-slate-300">Carregando...</p>}
-
-            {isError && (
-              <p className="text-red-300">
-                Erro ao carregar categorias. Verifique o backend.
-              </p>
-            )}
-
-            {!isLoading && categories?.length === 0 && (
-              <p className="text-slate-300">Nenhuma categoria cadastrada.</p>
-            )}
-
-            <div className="space-y-4">
-              {categories?.map((category) => (
-                <div
-                  key={category.id}
-                  className="flex flex-col gap-4 rounded-xl border border-slate-700 bg-slate-950 p-5 md:flex-row md:items-center md:justify-between"
-                >
-                  <div>
-                    <h3 className="text-xl font-bold">{category.name}</h3>
-                    <p className="mt-1 text-sm text-slate-300">
-                      {category.description}
-                    </p>
-                    <p className="mt-2 text-xs text-slate-500">
-                      ID: {category.id}
-                    </p>
-                  </div>
-
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => handleEdit(category)}
-                      className="rounded-lg bg-amber-400 px-4 py-2 text-sm font-bold text-slate-950 transition hover:bg-amber-300"
-                    >
-                      Editar
-                    </button>
-
-                    <button
-                      onClick={() => handleDelete(category.id)}
-                      disabled={deleteMutation.isPending}
-                      className="rounded-lg bg-red-500 px-4 py-2 text-sm font-bold text-white transition hover:bg-red-400 disabled:opacity-60"
-                    >
-                      Excluir
-                    </button>
-                  </div>
+                  <p className="mt-2 text-xs text-zinc-500">
+                    ID: {category.id}
+                  </p>
                 </div>
-              ))}
-            </div>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => handleEdit(category)}
+                    className="rounded-md border border-zinc-700 px-4 py-2 text-sm font-semibold text-zinc-300 transition hover:border-green-500 hover:text-green-400"
+                  >
+                    Editar
+                  </button>
+
+                  <button
+                    onClick={() => handleDelete(category.id)}
+                    disabled={deleteMutation.isPending}
+                    className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500 disabled:cursor-not-allowed disabled:bg-zinc-600"
+                  >
+                    Excluir
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

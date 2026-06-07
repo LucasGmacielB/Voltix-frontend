@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { categoryService } from "@/services/categoryService";
 import Link from "next/link";
+import { Logo } from "@/components/logo/Logo";
 
 export default function CategoriesPage(){
   const{
@@ -15,44 +16,50 @@ export default function CategoriesPage(){
   });
 
   return(
-    <main className="min-h-screen bg-[#0f172a] px-6 py-10 text-white">
-      <section className="mx-auto max-w-6xl">
-        <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-cyan-400">
-              Voltix Store
-            </p>
-            <h1 className="text-4xl font-bold md:text-5xl">
-              Categorias de produtos
-            </h1>
-            <p className="mt-4 max-w-2xl text-slate-300">
-              Explore as principais categorias da nossa loja de eletrônicos e
-              encontre os produtos ideais para o seu dia a dia.
-            </p>
-          </div>
+    <main className="min-h-screen bg-zinc-100">
+      <section className="relative bg-gradient-to-br from-black via-zinc-950 to-zinc-900 px-6 py-6 text-white">
+        <header className="mx-auto flex max-w-6xl items-center justify-between">
+          <Logo />
 
           <Link
             href="/admin/categories"
-            className="rounded-xl bg-cyan-500 px-5 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-400"
+            className="text-sm text-zinc-300 transition hover:text-green-400"
           >
             Gerenciar categorias
           </Link>
-        </div>
+        </header>
 
+        <div className="mx-auto mt-12 max-w-6xl pb-20">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-green-400">
+            Voltix Store
+          </p>
+
+          <h1 className="text-3xl font-semibold text-white md:text-5xl">
+            Categorias de produtos
+          </h1>
+
+          <p className="mt-4 max-w-2xl text-zinc-400">
+            Explore as categorias disponíveis na Voltix e encontre produtos de
+            tecnologia organizados de forma simples e rápida.
+          </p>
+        </div>
+      </section>
+
+      <section className="relative z-10 mx-auto -mt-12 max-w-6xl px-6 pb-12">
         {isLoading && (
-          <div className="rounded-2xl bg-slate-900 p-8 text-slate-300">
+          <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 text-zinc-300 shadow-2xl">
             Carregando categorias...
           </div>
         )}
 
         {isError && (
-          <div className="rounded-2xl border border-red-500/40 bg-red-500/10 p-8 text-red-300">
+          <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-6 text-red-400 shadow-2xl">
             Erro ao carregar categorias. Verifique se o backend está rodando.
           </div>
         )}
 
         {!isLoading && categories?.length === 0 && (
-          <div className="rounded-2xl bg-slate-900 p-8 text-slate-300">
+          <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 text-zinc-300 shadow-2xl">
             Nenhuma categoria cadastrada ainda.
           </div>
         )}
@@ -61,15 +68,17 @@ export default function CategoriesPage(){
           {categories?.map((category) => (
             <article
               key={category.id}
-              className="rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-lg transition hover:-translate-y-1 hover:border-cyan-400"
+              className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl transition hover:-translate-y-1 hover:border-green-500"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-cyan-500/20 text-xl font-bold text-cyan-300">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-green-600 text-lg font-bold text-white">
                 {category.name.charAt(0).toUpperCase()}
               </div>
 
-              <h2 className="mb-2 text-2xl font-bold">{category.name}</h2>
+              <h2 className="text-xl font-semibold text-white">
+                {category.name}
+              </h2>
 
-              <p className="text-sm leading-6 text-slate-300">
+              <p className="mt-3 text-sm leading-6 text-zinc-400">
                 {category.description || "Sem descrição cadastrada."}
               </p>
             </article>
