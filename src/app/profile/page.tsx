@@ -5,6 +5,7 @@ import { IoPersonCircle, IoLocationSharp } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {updateProfile, changePassword,} from "@/services/authService";
+import { Logo } from "@/components/logo/Logo";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -75,15 +76,33 @@ async function handleChangePassword() {
 }
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
+    <main className="min-h-screen bg-[linear-gradient(to_bottom,#000000_0%,#111111_60%,#d1d5db_85%,#ffffff_100%)]">
       <div className="max-w-6xl mx-auto px-6 py-10">
-        <h1 className="text-4xl font-bold text-green-500 mb-10">
-          Voltix
-        </h1>
+      <header className="mx-auto flex max-w-6xl items-center justify-between border-b border-zinc-800 pb-4 mb-10">
+       <Logo />
 
-        <div className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl">
-          <div className="flex flex-col md:flex-row md:items-center gap-6">
-            <IoPersonCircle className="text-[120px] text-green-500 drop-shadow-[0_0_15px_rgba(34,197,94,0.8)]" />
+     <div className="flex items-center gap-6">
+      <button
+      onClick={() => router.push("/dashboard")}
+      className="text-sm text-zinc-300 transition hover:text-green-400 hidden sm:block">
+      Dashboard
+    </button>
+
+    <button
+      onClick={() => router.push("/profile")}
+      className="flex items-center gap-2 text-zinc-300 hover:text-green-400 transition"
+    >
+      <IoPersonCircle className="text-2xl" />
+      <span className="text-xs font-medium hidden md:inline">
+        Minha Conta
+      </span>
+      </button>
+      </div>
+     </header>
+
+      <div className="bg-[#2b2e33] border border-[#3a3d42] rounded-3xl p-8">        
+      <div className="flex flex-col md:flex-row md:items-center gap-6">
+            <IoPersonCircle className="text-[120px] text-[#22C55E]" />
 
             <div>
               <h2 className="text-4xl font-bold">
@@ -97,8 +116,8 @@ async function handleChangePassword() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 mt-10">
-            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6">
-              <h3 className="text-xl font-semibold mb-5 text-green-400">
+            <div className="bg-[#35383d] border border-[#45484d] shadow-[0_0_20px_rgba(0,0,0,0.25)] rounded-2xl p-6">
+              <h3 className="text-xl font-semibold mb-5 text-white">
                 Dados do Usuário
               </h3>
 
@@ -124,13 +143,13 @@ async function handleChangePassword() {
               </div>
             </div>
 
-            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6">
-              <h3 className="text-xl font-semibold mb-5 text-green-400">
+            <div className="bg-[#35383d] border border-[#45484d] shadow-[0_0_20px_rgba(0,0,0,0.25)] rounded-2xl p-6">
+              <h3 className="text-xl font-semibold mb-5 text-white">
                 Endereços
               </h3>
 
               <div className="flex items-center gap-3 mb-6">
-                <IoLocationSharp className="text-green-500 text-2xl" />
+                <IoLocationSharp className="text-[#22C55E] text-2xl" />
 
                 <span className="text-slate-300">
                   Gerencie seus endereços cadastrados
@@ -139,36 +158,36 @@ async function handleChangePassword() {
 
               <button
                 onClick={() => router.push("/addresses")}
-                className="w-full bg-green-600 hover:bg-green-500 transition rounded-xl py-3 font-semibold"
+                className="w-full border border-[#334155] bg-[#1E293B] rounded-xl py-3 hover:bg-[#334155] transition-all duration-300 font-medium"
               >
                 Gerenciar Endereços
               </button>
             </div>
 
-            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6">
-              <h3 className="text-xl font-semibold mb-5 text-green-400">
+            <div className="bg-[#35383d] border border-[#45484d] shadow-[0_0_20px_rgba(0,0,0,0.25)] rounded-2xl p-6">
+              <h3 className="text-xl font-semibold mb-5 text-white">
                 Configurações
               </h3>
 
               <div className="space-y-3">
-               <button onClick={() => setEditOpen(true)} className="w-full border border-slate-600 rounded-xl py-3 hover:bg-slate-700 transition"
+               <button onClick={() => setEditOpen(true)} className="w-full border border-[#334155] bg-[#1E293B] rounded-xl py-3 hover:bg-[#334155] transition-all duration-300 font-medium"
                 >Editar Perfil
                 </button>
 
-               <button onClick={() => setPasswordOpen(true)} className="w-full border border-slate-600 rounded-xl py-3 hover:bg-slate-700 transition"
+               <button onClick={() => setPasswordOpen(true)} className="w-full border border-[#334155] bg-[#1E293B] rounded-xl py-3 hover:bg-[#334155] transition-all duration-300 font-medium"
             >Alterar Senha
               </button>
               </div>
             </div>
 
-            <div className="bg-slate-800 border border-slate-700 rounded-2xl p-6 flex flex-col justify-center">
-              <h3 className="text-xl font-semibold mb-5 text-red-400">
+            <div className="bg-[#35383d] border border-[#45484d] shadow-[0_0_20px_rgba(0,0,0,0.25)] rounded-2xl p-6 flex flex-col justify-center">
+              <h3 className="text-xl font-semibold mb-5 text-white">
                 Sessão
               </h3>
 
               <button
                 onClick={handleLogout}
-                className="w-full bg-red-600 hover:bg-red-500 transition rounded-xl py-3 font-semibold"
+                className="w-full bg-red-600 hover:bg-red-500 transition-all duration-300 rounded-xl py-3 font-semibold shadow-lg"
               >
                 Sair da Conta
               </button>
@@ -177,8 +196,8 @@ async function handleChangePassword() {
         </div>
       </div>
       {editOpen && (
-  <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-    <div className="bg-slate-900 p-6 rounded-2xl w-[400px] border border-slate-700">
+  <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+    <div className= "bg-slate-900/95 p-6 rounded-3xl w-[400px] border border-slate-800">
       <h2 className="text-xl font-bold mb-4">
         Editar Perfil
       </h2>
@@ -187,27 +206,27 @@ async function handleChangePassword() {
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Nome"
-        className="w-full mb-3 p-3 rounded bg-slate-800"
+        className="w-full mb-3 p-3 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none focus:border-green-500"
       />
 
       <input
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Email"
-        className="w-full mb-4 p-3 rounded bg-slate-800"
+        className="w-full mb-4 p-3 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none focus:border-green-500"
       />
 
       <div className="flex gap-3">
         <button
           onClick={handleUpdateProfile}
-          className="flex-1 bg-green-600 rounded py-2"
+          className="flex-1 bg-bg-[#16A34A] hover:bg-green-500 transition-all duration-200 rounded-xl py-2 font-semibold"
         >
           Salvar
         </button>
 
         <button
           onClick={() => setEditOpen(false)}
-          className="flex-1 bg-red-600 rounded py-2"
+          className="flex-1 bg-red-600 hover:bg-red-500 transition-all duration-200 rounded-xl py-2 font-semibold"
         >
           Cancelar
         </button>
@@ -216,7 +235,7 @@ async function handleChangePassword() {
   </div>
 )}
 {passwordOpen && (
-  <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+  <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
     <div className="bg-slate-900 p-6 rounded-2xl w-[400px] border border-slate-700">
       <h2 className="text-xl font-bold mb-4">
         Alterar Senha
@@ -241,7 +260,7 @@ async function handleChangePassword() {
       <div className="flex gap-3">
         <button
           onClick={handleChangePassword}
-          className="flex-1 bg-green-600 rounded py-2"
+          className="flex-1 bg-[#16A34A] rounded py-2"
         >
           Salvar
         </button>
