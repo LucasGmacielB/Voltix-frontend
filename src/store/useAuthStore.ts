@@ -11,7 +11,6 @@ type AuthStore = {
   user: User | null;
   basicAuth: string | null;
   setUser: (user: User) => void;
-  setAuth: (user: User, password: string) => void;
   logout: () => void;
 };
 
@@ -22,6 +21,8 @@ export const useAuthStore = create<AuthStore>()(
       basicAuth: null,
 
       setUser: (user) => set({ user }),
+
+      updateUser: (user) => set({ user }),
 
       setAuth: (user, password) => {
         const token = btoa(`${user.email}:${password}`);
