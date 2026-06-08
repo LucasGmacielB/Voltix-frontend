@@ -47,6 +47,6 @@ export async function changePassword(data: {
   currentPassword: string;
   newPassword: string;
 }) {
-  const response = await api.post("/auth/change-password", data);
+  const response = await api.put("/auth/password", data);
   return response.data;
 }
