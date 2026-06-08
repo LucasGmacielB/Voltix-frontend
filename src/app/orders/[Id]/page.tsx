@@ -62,24 +62,25 @@ export default function OrderDetailPage() {
   const params = useParams();
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
+  const basicAuth = useAuthStore((state) => state.basicAuth);
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [cancelling, setCancelling] = useState(false);
 
   useEffect(() => {
-    if (!user) {
+    if (!user || !basicAuth) {
       router.push("/login");
       return;
     }
-    if (params.id) fetchOrder(Number(params.id));
-  }, [user, params.id]);
+    if (params.id) fetchOrder(Number(params.id), basicAuth);
+  }, [user, basicAuth, params.id]);
 
-  async function fetchOrder(id: number) {
+  async function fetchOrder(id: number, basicAuth: string) {
     try {
       setLoading(true);
       setError(null);
-      const data = await getOrderById(id);
+      const data = await getOrderById(id, basicAuth);
       setOrder(data);
     } catch (err) {
       setError(getErrorMessage(err));
@@ -89,12 +90,12 @@ export default function OrderDetailPage() {
   }
 
   async function handleCancel() {
-    if (!order) return;
+    if (!order || !basicAuth) return;
     if (!confirm("Tem certeza que deseja cancelar este pedido?")) return;
     try {
       setCancelling(true);
-      await cancelOrder(order.id);
-      await fetchOrder(order.id);
+      await cancelOrder(order.id, basicAuth);
+      await fetchOrder(order.id, basicAuth);
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -223,15 +224,18 @@ export default function OrderDetailPage() {
                   Itens do pedido
                 </h2>
                 <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0" }}>
-                  {order.items.map((item) => (
-                    <li key={item.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.75rem 0", borderBottom: "1px solid #2a2a2a" }}>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
-                        <span style={{ color: "#f9fafb", fontSize: "0.9rem", fontWeight: 500 }}>{item.productName}</span>
-                        <span style={{ color: "#6b7280", fontSize: "0.78rem" }}>{item.quantity}x {formatCurrency(item.unitPrice)}</span>
-                      </div>
-                      <span style={{ color: "#d1d5db", fontWeight: 600, fontSize: "0.9rem" }}>{formatCurrency(item.totalPrice)}</span>
-                    </li>
-                  ))}
+                  {order.items.map((item) => {
+                    const itemTotal = item.totalPrice ?? item.unitPrice * item.quantity;
+                    return (
+                      <li key={item.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.75rem 0", borderBottom: "1px solid #2a2a2a" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "0.2rem" }}>
+                          <span style={{ color: "#f9fafb", fontSize: "0.9rem", fontWeight: 500 }}>{item.productName}</span>
+                          <span style={{ color: "#6b7280", fontSize: "0.78rem" }}>{item.quantity}x {formatCurrency(item.unitPrice)}</span>
+                        </div>
+                        <span style={{ color: "#d1d5db", fontWeight: 600, fontSize: "0.9rem" }}>{formatCurrency(itemTotal)}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
 
@@ -242,14 +246,14 @@ export default function OrderDetailPage() {
                 </h2>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.875rem", color: "#6b7280" }}>
-                    <span>Subtotal</span><span>{formatCurrency(order.subtotal)}</span>
+                    <span>Subtotal</span><span>{formatCurrency(order.subtotal ?? order.items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0))}</span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.875rem", color: "#6b7280" }}>
                     <span>Frete</span>
-                    <span>{order.shippingCost === 0 ? "Grátis" : formatCurrency(order.shippingCost)}</span>
+                    <span>{(order.shippingCost ?? 0) === 0 ? "Grátis" : formatCurrency(order.shippingCost ?? 0)}</span>
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.95rem", fontWeight: 700, color: "#f9fafb", borderTop: "1px solid #2a2a2a", paddingTop: "0.6rem" }}>
-                    <span>Total</span><span style={{ color: "#22c55e" }}>{formatCurrency(order.total)}</span>
+                    <span>Total</span><span style={{ color: "#22c55e" }}>{formatCurrency(order.total ?? (order.subtotal ?? order.items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0)) + (order.shippingCost ?? 0))}</span>
                   </div>
                 </div>
               </div>
@@ -259,11 +263,15 @@ export default function OrderDetailPage() {
                 <h2 style={{ color: "#9ca3af", fontSize: "0.8rem", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "1rem" }}>
                   Endereço de entrega
                 </h2>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem", fontSize: "0.875rem", color: "#d1d5db" }}>
-                  <span>{order.address.street}, {order.address.number}{order.address.complement ? ` - ${order.address.complement}` : ""}</span>
-                  <span>{order.address.neighborhood} — {order.address.city}/{order.address.state}</span>
-                  <span style={{ color: "#6b7280" }}>CEP: {order.address.zipCode}</span>
-                </div>
+                {order.address ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem", fontSize: "0.875rem", color: "#d1d5db" }}>
+                    <span>{order.address.street}, {order.address.number}{order.address.complement ? ` - ${order.address.complement}` : ""}</span>
+                    <span>{order.address.neighborhood} — {order.address.city}/{order.address.state}</span>
+                    <span style={{ color: "#6b7280" }}>CEP: {order.address.zipCode}</span>
+                  </div>
+                ) : (
+                  <span style={{ color: "#d1d5db", fontSize: "0.9rem" }}>Endereço de entrega não informado.</span>
+                )}
               </div>
 
               {/* Cancel */}
