@@ -37,6 +37,11 @@ const [newPassword, setNewPassword] = useState("");
   async function handleUpdateProfile() {
   if (!user) return;
 
+  if (!name.trim() || !email.trim()) {
+    alert("Preencha todos os campos.");
+    return;
+  }
+
   try {
     const updatedUser = await updateProfile({
       id: user.id,
@@ -56,6 +61,11 @@ const [newPassword, setNewPassword] = useState("");
 
 async function handleChangePassword() {
   if (!user) return;
+
+  if (!currentPassword.trim() || !newPassword.trim()) {
+    alert("Preencha todos os campos.");
+    return;
+  }
 
   try {
     await changePassword({
@@ -170,11 +180,11 @@ async function handleChangePassword() {
               </h3>
 
               <div className="space-y-3">
-               <button onClick={() => setEditOpen(true)} className="w-full border border-[#334155] bg-[#1E293B] rounded-xl py-3 hover:bg-[#334155] transition-all duration-300 font-medium"
+               <button onClick={() => { setName(user?.name ?? ""); setEmail(user?.email ?? ""); setEditOpen(true); }} className="w-full border border-[#334155] bg-[#1E293B] rounded-xl py-3 hover:bg-[#334155] transition-all duration-300 font-medium"
                 >Editar Perfil
                 </button>
 
-               <button onClick={() => setPasswordOpen(true)} className="w-full border border-[#334155] bg-[#1E293B] rounded-xl py-3 hover:bg-[#334155] transition-all duration-300 font-medium"
+               <button onClick={() => { setCurrentPassword(""); setNewPassword(""); setPasswordOpen(true);}} className="w-full border border-[#334155] bg-[#1E293B] rounded-xl py-3 hover:bg-[#334155] transition-all duration-300 font-medium"
             >Alterar Senha
               </button>
               </div>
