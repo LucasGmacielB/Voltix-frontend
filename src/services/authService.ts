@@ -32,3 +32,21 @@ export async function resetPassword(
   const response = await api.post<MessageResponse>("/auth/reset-password", data);
   return response.data;
 }
+
+export async function updateProfile(data: {
+  id: number;
+  name: string;
+  email: string;
+}) {
+  const response = await api.put("/auth/profile", data);
+  return response.data;
+}
+
+export async function changePassword(data: {
+  id: number;
+  currentPassword: string;
+  newPassword: string;
+}) {
+  const response = await api.put("/auth/password", data);
+  return response.data;
+}

@@ -1,0 +1,16 @@
+*   [33md1a3ad2[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m Merge branch 'main' of https://github.com/LucasGmacielB/Voltix-frontend
+[31m|[m[32m\[m  
+[31m|[m *   [33m69a697e[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge branch 'main' of https://github.com/LucasGmacielB/Voltix-frontend
+[31m|[m [33m|[m[34m\[m  
+[31m|[m * [34m|[m [33md8dbc62[m adiciona página de listagem de pedidos com tema dark Voltix
+* [34m|[m [34m|[m [33m92c18b6[m feat: implementa gerenciamento de endereços
+[34m|[m [34m|[m[34m/[m  
+[34m|[m[34m/[m[34m|[m   
+* [34m|[m [33m23aebe7[m feat: implementar dashboard de perfil e configurar tanstack query
+* [34m|[m [33m342e1ff[m feat: criar tipos de endereço
+* [34m|[m [33mfc8f3d4[m feat: criação da estrutura do perfil e camada de serviço de endereço
+* [34m|[m [33m52dfa86[m feat: estrutura de perfil
+[34m|[m[34m/[m  
+* [33m6801872[m feat(orders): add order types (Order, OrderItem, OrderStatus, CreateOrderRequest)
+*   [33m94db7b6[m style: estiliza página de login - Merge pull request #1 from LucasGmacielB/lucas/login
+[35m|[m[36m\[m  
