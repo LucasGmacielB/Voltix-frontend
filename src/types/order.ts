@@ -7,13 +7,13 @@ export type OrderStatus =
   | "CANCELLED";
 
 export interface OrderItem {
-  id: number;
+  id?: number;
   productId: number;
   productName: string;
   productImage?: string;
   quantity: number;
   unitPrice: number;
-  totalPrice: number;
+  totalPrice?: number;
 }
 
 export interface OrderAddress {
@@ -30,17 +30,22 @@ export interface Order {
   id: number;
   status: OrderStatus;
   items: OrderItem[];
-  address: OrderAddress;
-  subtotal: number;
-  shippingCost: number;
+  address?: OrderAddress;
+  subtotal?: number;
+  shippingCost?: number;
   total: number;
   createdAt: string;
-  updatedAt: string;
+  updatedAt?: string;
+}
+
+export interface CreateOrderItemRequest {
+  productId: number;
+  quantity: number;
 }
 
 export interface CreateOrderRequest {
   addressId: number;
-  paymentMethod: "CREDIT_CARD" | "PIX" | "BOLETO";
+  items: CreateOrderItemRequest[];
 }
 
 export interface CreateOrderResponse {
