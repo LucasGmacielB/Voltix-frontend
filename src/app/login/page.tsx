@@ -45,7 +45,11 @@ export default function LoginPage() {
     <main className="min-h-screen bg-zinc-100">
       <section className="relative min-h-[38vh] bg-gradient-to-br from-black via-zinc-950 to-zinc-900 px-6 py-6 text-white">
         <header className="mx-auto flex max-w-6xl items-center justify-between">
-          <Logo />
+          <div>
+            <Link href="/login" className="text-2xl font-bold tracking-tight">
+              <span className="text-green-500">Vol</span>tix
+            </Link>
+          </div>
           <Link
             href="/"
             className="text-sm text-zinc-300 transition hover:text-green-400"
