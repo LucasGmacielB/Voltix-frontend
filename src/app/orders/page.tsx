@@ -41,23 +41,24 @@ function formatCurrency(value: number) {
 export default function OrdersPage() {
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
+  const basicAuth = useAuthStore((state) => state.basicAuth);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user) {
+    if (!user || !basicAuth) {
       router.push("/login");
       return;
     }
-    fetchOrders();
-  }, [user]);
+    fetchOrders(user.id, basicAuth);
+  }, [user, basicAuth]);
 
-  async function fetchOrders() {
+  async function fetchOrders(userId: number, token: string) {
     try {
       setLoading(true);
       setError(null);
-      const data = await getOrders();
+      const data = await getOrders(userId, token);
       setOrders(data);
     } catch (err) {
       setError(getErrorMessage(err));
@@ -67,126 +68,56 @@ export default function OrdersPage() {
   }
 
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        background: "linear-gradient(180deg, #000000 0%, #0a0a0a 40%, #f4f4f4 40%)",
-        fontFamily: "'Segoe UI', sans-serif",
-      }}
-    >
-      <nav
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "0 2.5rem",
-          height: "60px",
-          backgroundColor: "#000",
-        }}
-      >
-        <Link href="/" style={{ textDecoration: "none" }}>
-          <span style={{ fontSize: "1.4rem", fontWeight: 700, color: "#fff" }}>
-            Vol<span style={{ color: "#22c55e" }}>tix</span>
+    <main className="min-h-screen bg-zinc-950 text-white font-sans">
+      <nav className="flex items-center justify-between px-10 h-[60px] bg-black border-b border-zinc-900">
+        <Link href="/" className="no-underline">
+          <span className="text-xl font-bold text-white">
+            Vol<span className="text-green-500">tix</span>
           </span>
         </Link>
         <Link
           href="/profile"
-          style={{ color: "#d1d5db", fontSize: "0.9rem", textDecoration: "none" }}
+          className="text-sm text-zinc-300 no-underline hover:text-green-400 transition"
         >
           {user?.name ?? "Perfil"}
         </Link>
       </nav>
 
-      <div
-        style={{
-          backgroundColor: "#000",
-          paddingTop: "2.5rem",
-          paddingBottom: "3.5rem",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "0.5rem",
-        }}
-      >
-        <div
-          style={{
-            width: 60,
-            height: 60,
-            borderRadius: "50%",
-            border: "2px solid #22c55e",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            marginBottom: "0.75rem",
-            boxShadow: "0 0 18px rgba(34,197,94,0.35)",
-          }}
-        >
+      <div className="bg-black pt-10 pb-14 flex flex-col items-center gap-2">
+        <div className="w-[60px] h-[60px] rounded-full border-2 border-green-500 flex items-center justify-center mb-3 shadow-[0_0_18px_rgba(34,197,94,0.35)]">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
             <rect x="9" y="3" width="6" height="4" rx="1" />
             <path d="M9 12h6M9 16h4" />
           </svg>
         </div>
-        <h1 style={{ color: "#9ca3af", fontSize: "1.7rem", fontWeight: 600, margin: 0 }}>
+        <h1 className="text-zinc-300 text-2xl font-semibold m-0">
           Meus Pedidos
         </h1>
       </div>
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          padding: "0 1rem 4rem",
-          marginTop: "-2rem",
-        }}
-      >
-        <div
-          style={{
-            width: "100%",
-            maxWidth: 680,
-            backgroundColor: "#1c1c1c",
-            borderRadius: "1rem",
-            padding: "2rem",
-            boxShadow: "0 4px 32px rgba(0,0,0,0.4)",
-          }}
-        >
+      <div className="flex justify-center px-4 pb-16 -mt-8">
+        <div className="w-full max-w-2xl bg-zinc-900 rounded-2xl p-8 shadow-[0_4px_32px_rgba(0,0,0,0.4)] border border-zinc-800">
           {loading && (
-            <p style={{ color: "#6b7280", textAlign: "center", padding: "3rem 0", fontSize: "0.9rem" }}>
+            <p className="text-zinc-500 text-center py-12 text-sm animate-pulse">
               Carregando pedidos...
             </p>
           )}
 
           {error && !loading && (
-            <div
-              style={{
-                backgroundColor: "rgba(239,68,68,0.1)",
-                border: "1px solid rgba(239,68,68,0.3)",
-                borderRadius: "0.5rem",
-                padding: "0.875rem 1rem",
-                color: "#f87171",
-                fontSize: "0.875rem",
-              }}
-            >
+            <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-400 text-sm">
               {error}
             </div>
           )}
 
           {!loading && !error && orders.length === 0 && (
-            <div style={{ textAlign: "center", padding: "3rem 0" }}>
-              <p style={{ color: "#6b7280", marginBottom: "1.25rem", fontSize: "0.9rem" }}>
+            <div className="text-center py-12">
+              <p className="text-zinc-500 mb-5 text-sm">
                 Você ainda não realizou nenhum pedido.
               </p>
               <Link
                 href="/products"
-                style={{
-                  backgroundColor: "#22c55e",
-                  color: "#000",
-                  fontWeight: 700,
-                  padding: "0.65rem 1.5rem",
-                  borderRadius: "0.4rem",
-                  textDecoration: "none",
-                  fontSize: "0.9rem",
-                }}
+                className="bg-green-600 hover:bg-green-500 text-white font-semibold py-2.5 px-6 rounded-lg no-underline text-sm transition"
               >
                 Ver produtos
               </Link>
@@ -194,53 +125,34 @@ export default function OrdersPage() {
           )}
 
           {!loading && !error && orders.length > 0 && (
-            <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <ul className="list-none m-0 p-0 flex flex-col gap-4">
               {orders.map((order) => (
                 <li
                   key={order.id}
-                  style={{
-                    borderBottom: "1px solid #2a2a2a",
-                    paddingBottom: "1rem",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "1rem",
-                  }}
+                  className="border-b border-zinc-800 pb-4 flex items-center justify-between gap-4 last:border-0 last:pb-0"
                 >
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.3rem" }}>
-                    <span style={{ color: "#f9fafb", fontWeight: 600, fontSize: "0.95rem" }}>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-zinc-100 font-semibold text-[15px]">
                       Pedido #{order.id}
                     </span>
-                    <span style={{ color: "#6b7280", fontSize: "0.8rem" }}>
+                    <span className="text-zinc-500 text-xs">
                       {formatDate(order.createdAt)} &nbsp;·&nbsp; {order.items.length}{" "}
                       {order.items.length === 1 ? "item" : "itens"}
                     </span>
-                    <span style={{ color: "#d1d5db", fontSize: "0.85rem", fontWeight: 500 }}>
+                    <span className="text-zinc-300 text-sm font-medium mt-1">
                       {formatCurrency(order.total)}
                     </span>
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.6rem" }}>
+                  <div className="flex flex-col items-end gap-2.5">
                     <span
-                      style={{
-                        fontSize: "0.75rem",
-                        fontWeight: 600,
-                        padding: "0.25rem 0.75rem",
-                        borderRadius: "999px",
-                        border: "1px solid",
-                      }}
-                      className={STATUS_COLOR[order.status]}
+                      className={`text-[11px] font-semibold px-3 py-1 rounded-full border ${STATUS_COLOR[order.status]}`}
                     >
                       {STATUS_LABEL[order.status]}
                     </span>
                     <Link
                       href={`/orders/${order.id}`}
-                      style={{
-                        color: "#22c55e",
-                        fontSize: "0.8rem",
-                        fontWeight: 600,
-                        textDecoration: "none",
-                      }}
+                      className="text-green-500 hover:text-green-400 text-xs font-semibold no-underline transition"
                     >
                       Ver detalhes →
                     </Link>
