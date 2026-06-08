@@ -70,7 +70,7 @@ export default function OrdersPage() {
   return (
     <main className="min-h-screen bg-zinc-950 text-white font-sans">
       <nav className="flex items-center justify-between px-10 h-[60px] bg-black border-b border-zinc-900">
-        <Link href="/" className="no-underline">
+        <Link href="/products" className="no-underline">
           <span className="text-xl font-bold text-white">
             Vol<span className="text-green-500">tix</span>
           </span>
