@@ -4,6 +4,17 @@ Sistema web desenvolvido em **React + Next.js** para gerenciamento e comercializ
 
 ---
 
+# 👨‍💻 Integrantes
+
+* Moisés Carlos
+* Lucas Gabriel
+* Zarto Wagner
+* Marconi Andrade
+* Paulo César
+* Carlos Henrique
+
+---
+
 # 📚 Sobre o Projeto
 
 O Voltix foi desenvolvido como projeto acadêmico com o objetivo de aplicar conceitos modernos de desenvolvimento web utilizando:
@@ -243,17 +254,6 @@ https://voltix-backend-7rx1.onrender.com/
 ### Back-end
 
 https://github.com/LucasGmacielB/Voltix-backend
-
----
-
-# 👨‍💻 Integrantes
-
-* Moisés Carlos
-* Lucas Gabriel
-* Zarto Wagner
-* Marconi Andrade
-* Paulo César
-* Carlos Henrique
 
 ---
 
