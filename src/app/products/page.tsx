@@ -55,8 +55,7 @@ export default function ProductsPage() {
             >
               Dashboard
             </Link>
-            
-            {/* Ícone de Perfil Atualizado Aqui */}
+          
             <Link 
               href="/profile" 
               className="flex items-center gap-2 text-zinc-300 hover:text-green-400 transition"
@@ -90,7 +89,6 @@ export default function ProductsPage() {
         </div>
       </section>
 
-      {/* O restante do arquivo (seção de conteúdo) permanece igual */}
       <section className="relative z-10 mx-auto -mt-10 w-full max-w-5xl px-6 pb-12">
         {produtosFiltrados && produtosFiltrados.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
@@ -101,8 +99,8 @@ export default function ProductsPage() {
               >
                 <div>
                   <div className="w-full h-40 bg-zinc-950 border border-zinc-800 rounded-lg mb-4 flex items-center justify-center text-zinc-500 text-sm overflow-hidden">
-                    {produto.imageUrl ? (
-                      <img src={produto.imageUrl} alt={produto.name} className="w-full h-full object-cover rounded-lg" />
+                    {produto.imgUrl ? (
+                      <img src={produto.imgUrl} alt={produto.name} className="w-full h-full object-cover rounded-lg" />
                     ) : (
                       <span>Sem Imagem Cadastrada</span>
                     )}
