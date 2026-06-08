@@ -18,7 +18,7 @@ export default function CategoriesPage() {
   return (
     <main className="min-h-screen bg-zinc-100">
       <section className="relative bg-gradient-to-br from-black via-zinc-950 to-zinc-900 px-6 py-6 text-white">
-        <header className="mx-auto flex max-w-6xl items-center justify-between">
+        <header className="mx-auto flex max-w-6xl items-center justify-between border-b border-zinc-800 pb-4">
           <Logo />
 
           <Link
