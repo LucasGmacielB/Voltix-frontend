@@ -5,8 +5,8 @@ import { categoryService } from "@/services/categoryService";
 import Link from "next/link";
 import { Logo } from "@/components/logo/Logo";
 
-export default function CategoriesPage(){
-  const{
+export default function CategoriesPage() {
+  const {
     data: categories,
     isLoading,
     isError,
@@ -15,7 +15,7 @@ export default function CategoriesPage(){
     queryFn: categoryService.findAll,
   });
 
-  return(
+  return (
     <main className="min-h-screen bg-zinc-100">
       <section className="relative bg-gradient-to-br from-black via-zinc-950 to-zinc-900 px-6 py-6 text-white">
         <header className="mx-auto flex max-w-6xl items-center justify-between">
@@ -66,8 +66,9 @@ export default function CategoriesPage(){
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {categories?.map((category) => (
-            <article
+            <Link
               key={category.id}
+              href="/products"
               className="rounded-xl border border-zinc-800 bg-zinc-900 p-6 shadow-2xl transition hover:-translate-y-1 hover:border-green-500"
             >
               <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-green-600 text-lg font-bold text-white">
@@ -81,7 +82,11 @@ export default function CategoriesPage(){
               <p className="mt-3 text-sm leading-6 text-zinc-400">
                 {category.description || "Sem descrição cadastrada."}
               </p>
-            </article>
+
+              <p className="mt-5 text-sm font-semibold text-green-400">
+                Ver produtos
+              </p>
+            </Link>
           ))}
         </div>
       </section>
