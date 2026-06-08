@@ -93,9 +93,9 @@ async function handleChangePassword() {
 
      <div className="flex items-center gap-6">
       <button
-      onClick={() => router.push("/dashboard")}
+      onClick={() => router.push("/products")}
       className="text-sm text-zinc-300 transition hover:text-green-400 hidden sm:block">
-      Dashboard
+      Catálogo
     </button>
 
     <button

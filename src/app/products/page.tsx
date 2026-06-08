@@ -1,16 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { buscarProdutos } from '@/services/product';
 import { Logo } from '@/components/logo/Logo';
 import { CircleAuth } from '@/components/component-circle-login/CircleAuth';
-// Linha 9 corrigida aqui:
-import { IoHardwareChipOutline, IoSearchOutline, IoPersonCircleOutline } from "react-icons/io5";
+import { ProductCard } from '@/components/ProductCard/ProductCard';
+import { useCartStore } from '@/store/useCartStore';
+import { IoHardwareChipOutline, IoSearchOutline, IoPersonCircleOutline, IoCartOutline } from "react-icons/io5";
 
 export default function ProductsPage() {
   const [search, setSearch] = useState('');
+  const [mounted, setMounted] = useState(false);
+  
+  const items = useCartStore((state) => state.items);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const totalItems = mounted ? items.reduce((acc, item) => acc + item.quantity, 0) : 0;
 
   const { data: produtos, isLoading, isError } = useQuery({
     queryKey: ['products'],
@@ -49,13 +59,21 @@ export default function ProductsPage() {
           <Logo />
           
           <div className="flex items-center gap-6">
-            <Link
-              href="/dashboard"
-              className="text-sm text-zinc-300 transition hover:text-green-400 hidden sm:block"
+            {/* Link do Carrinho */}
+            <Link 
+              href="/cart" 
+              className="relative flex items-center gap-2 text-zinc-300 hover:text-green-400 transition"
+              title="Carrinho de Compras"
             >
-              Dashboard
+              <IoCartOutline className="text-2xl" />
+              {totalItems > 0 && (
+                <span className="absolute -top-1.5 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-green-500 text-[10px] font-bold text-black">
+                  {totalItems}
+                </span>
+              )}
+              <span className="text-xs font-medium hidden md:inline">Carrinho</span>
             </Link>
-            
+
             {/* Ícone de Perfil Atualizado Aqui */}
             <Link 
               href="/profile" 
@@ -95,34 +113,7 @@ export default function ProductsPage() {
         {produtosFiltrados && produtosFiltrados.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {produtosFiltrados.map((produto) => (
-              <div 
-                key={produto.id} 
-                className="rounded-xl border border-zinc-800 bg-zinc-900 p-5 flex flex-col justify-between shadow-2xl transition duration-300 hover:border-zinc-700"
-              >
-                <div>
-                  <div className="w-full h-40 bg-zinc-950 border border-zinc-800 rounded-lg mb-4 flex items-center justify-center text-zinc-500 text-sm overflow-hidden">
-                    {produto.imageUrl ? (
-                      <img src={produto.imageUrl} alt={produto.name} className="w-full h-full object-cover rounded-lg" />
-                    ) : (
-                      <span>Sem Imagem Cadastrada</span>
-                    )}
-                  </div>
-                  <h2 className="text-lg font-semibold text-zinc-200 mb-2">{produto.name}</h2>
-                  <p className="text-zinc-400 text-xs line-clamp-2 mb-4">{produto.description}</p>
-                </div>
-
-                <div>
-                  <p className="text-xl font-bold text-green-400 mb-4">
-                    {produto.price.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
-                  </p>
-                  <Link 
-                    href={`/products/${produto.id}`}
-                    className="block text-center w-full rounded-md bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-green-500"
-                  >
-                    Ver Detalhes
-                  </Link>
-                </div>
-              </div>
+              <ProductCard key={produto.id} product={produto} />
             ))}
           </div>
         ) : (

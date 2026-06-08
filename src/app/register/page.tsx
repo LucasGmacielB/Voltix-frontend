@@ -35,7 +35,7 @@ export default function RegisterPage() {
     try {
       const user = await register({ name, email, password });
       setUser(user);
-      router.push("/dashboard");
+      router.push("/products");
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -47,7 +47,11 @@ export default function RegisterPage() {
     <main className="min-h-screen bg-zinc-100">
       <section className="relative min-h-[50vh] bg-gradient-to-br from-black via-zinc-950 to-zinc-900 px-6 py-6 text-white">
         <header className="mx-auto flex max-w-6xl items-center justify-between">
-          <Logo />
+          <div>
+            <Link href="/login" className="text-2xl font-bold tracking-tight">
+              <span className="text-green-500">Vol</span>tix
+            </Link>
+          </div>
 
           <Link
             href="/"
