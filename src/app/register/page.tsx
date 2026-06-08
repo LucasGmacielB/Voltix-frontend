@@ -35,7 +35,7 @@ export default function RegisterPage() {
     try {
       const user = await register({ name, email, password });
       setUser(user);
-      router.push("/dashboard");
+      router.push("/products");
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {

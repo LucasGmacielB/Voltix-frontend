@@ -33,7 +33,7 @@ export default function LoginPage() {
     try {
       const user = await login({ email, password });
       setAuth(user, password);
-      router.push("/dashboard");
+      router.push("/products");
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -45,7 +45,7 @@ export default function LoginPage() {
     <main className="min-h-screen bg-zinc-100">
       <section className="relative min-h-[38vh] bg-gradient-to-br from-black via-zinc-950 to-zinc-900 px-6 py-6 text-white">
         <header className="mx-auto flex max-w-6xl items-center justify-between">
-          <Logo/>
+          <Logo />
           <Link
             href="/"
             className="text-sm text-zinc-300 transition hover:text-green-400"
@@ -55,7 +55,7 @@ export default function LoginPage() {
         </header>
 
         <div className="mx-auto mt-10 flex max-w-6xl flex-col items-center text-center">
-          <CircleAuth icon={<IoPersonCircle />}/>
+          <CircleAuth icon={<IoPersonCircle />} />
 
           <h1 className="mt-5 text-xl font-semibold md:text-3xl text-gray-500">
             Acesse sua conta
